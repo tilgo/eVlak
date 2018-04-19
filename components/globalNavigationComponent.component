@@ -1,0 +1,209 @@
+<apex:component controller="globalNavigationComponentController">
+
+<apex:includeScript value="{!$Resource.jquery321}"  />
+
+<apex:attribute name="imeStrani" description="Page name - for selecting tabs in navigation" type="String" required="true"/>
+
+<script>
+	var nameOfThePage = '{!imeStrani}';
+
+	$(document).ready(function() {
+		debugger;
+		
+		console.log(nameOfThePage);
+
+		setActiveTab();
+	});
+
+	function setActiveTab() {
+		$('#' + nameOfThePage).addClass('slds-is-active');
+	}
+
+</script>
+
+
+<div style="border-left: 1px; border-right: 1px; border-left-color: lightgray; border-right-color: lightgray; border-left-style: solid; border-right-style: solid;">
+  <div class="slds-context-bar">
+    <div class="slds-context-bar__primary">
+      <div class="slds-context-bar__item slds-context-bar__dropdown-trigger slds-dropdown-trigger slds-dropdown-trigger_click slds-no-hover">
+        <div class="slds-context-bar__icon-action">
+          <a href="{!$Site.Prefix}/home">
+            <button class="slds-button slds-icon-waffle_container slds-context-bar__button" title="" disabled="true">
+              <span class="slds-icon-waffle">
+                <span class="slds-r1"></span>
+                <span class="slds-r2"></span>
+                <span class="slds-r3"></span>
+                <span class="slds-r4"></span>
+                <span class="slds-r5"></span>
+                <span class="slds-r6"></span>
+                <span class="slds-r7"></span>
+                <span class="slds-r8"></span>
+                <span class="slds-r9"></span>
+              </span>
+              <span class="slds-assistive-text">Open App Launcher</span>
+            </button>
+          </a>
+        </div>
+        <span class="slds-context-bar__label-action slds-context-bar__app-name">
+          <a href="{!$Site.Prefix}/home" class="slds-context-bar__label-action" title="O strani">
+            <span class="slds-truncate" title="eVlak" style="font-size: 18px;">eVlak&trade;</span>
+          </a>
+        </span>
+      </div>
+    </div>
+    <nav class="slds-context-bar__secondary" role="navigation">
+      <ul class="slds-grid">
+        <li class="slds-context-bar__item" id="timeTableTab">
+          <a href="{!$Site.Prefix}/vozniRed" class="slds-context-bar__label-action" title="Nakup vozovnice">
+            <span class="slds-truncate" title=""><svg class="slds-icon slds-icon_x-small slds-icon-text-default slds-m-right_x-small" aria-hidden="true">
+              <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#cases')}" />
+            </svg>eVozovnice</span>
+          </a>
+        </li>
+        <!-- <li class="slds-context-bar__item" id="prijavaTab">
+          <a href="/evlak/prijavaUporabnika" class="slds-context-bar__label-action" title="Menu Item">
+            <span class="slds-truncate" title="Menu Item">Prijava</span>
+          </a>
+        </li> -->
+        <!-- <li class="slds-context-bar__item" id="registracijaTab">
+          <a href="/evlak/registracijaUporabnika" class="slds-context-bar__label-action" title="Menu Item">
+            <span class="slds-truncate" title="Menu Item">Registracija</span>
+          </a>
+        </li> -->
+        <!-- <li class="slds-context-bar__item" id="errorTab">
+          <a href="{!$Site.Prefix}/error404" class="slds-context-bar__label-action" title="Menu Item">
+            <span class="slds-truncate" title="Menu Item">404</span>
+          </a>
+        </li> -->
+
+
+        <!-- <li class="slds-context-bar__item" id="homeTab">
+          <a href="{!$Site.Prefix}/home" class="slds-context-bar__label-action" title="O strani">
+            <span class="slds-truncate" title=""><svg class="slds-icon slds-icon_x-small slds-icon-text-default slds-m-right_x-small" aria-hidden="true">
+              <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#info')}" />
+            </svg>O strani</span>
+          </a>
+        </li> -->
+
+        
+        <li class="slds-context-bar__item slds-context-bar__dropdown-trigger slds-dropdown-trigger slds-dropdown-trigger_hover" id="racunTab">
+          <a href="javascript:void(0);" class="slds-context-bar__label-action" title="Odpri podmeni menija račun">
+            <span class="slds-truncate" title=""><svg class="slds-icon slds-icon_x-small slds-icon-text-default slds-m-right_x-small" aria-hidden="true">
+              <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#user')}" />
+            </svg>{!IF(userName != null, userName, 'Gost')}</span>
+          </a>
+          <div class="slds-context-bar__icon-action slds-p-left_none">
+            <button class="slds-button slds-button_icon slds-button_icon slds-context-bar__button" aria-haspopup="true" title="Odpri podmeni menija račun">
+              <svg class="slds-button__icon" aria-hidden="true">
+                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#chevrondown')}"/>
+              </svg>
+              <span class="slds-assistive-text">Račun</span>
+            </button>
+          </div>
+          <div class="slds-dropdown slds-dropdown_right">
+            <ul class="slds-dropdown__list" role="menu">
+              <apex:outputPanel layout="none" rendered="{!!isMember}">
+                <li class="slds-dropdown__item" role="presentation">
+                  <a href="{!$Site.Prefix}/prijavaUporabnika" role="menuitem" tabindex="-1">
+                    <span class="slds-truncate" title="Prijava">
+                      <svg class="slds-icon slds-icon_x-small slds-icon-text-default slds-m-right_x-small" aria-hidden="true">
+                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#user')}" />
+                      </svg>Prijava</span>
+                  </a>
+                </li>
+                <li class="slds-dropdown__item" role="presentation">
+                  <a href="{!$Site.Prefix}/registracijaUporabnika" role="menuitem" tabindex="-1">
+                    <span class="slds-truncate" title="Registracija">
+                      <svg class="slds-icon slds-icon_x-small slds-icon-text-default slds-m-right_x-small" aria-hidden="true">
+                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#adduser')}" />
+                      </svg>Registracija</span>
+                  </a>
+                </li>
+                <li class="slds-dropdown__item" role="presentation">
+                  <a href="{!$Site.Prefix}/ForgotPassword" role="menuitem" tabindex="-1">
+                    <span class="slds-truncate" title="Pozabljeno geslo">
+                      <svg class="slds-icon slds-icon_x-small slds-icon-text-default slds-m-right_x-small" aria-hidden="true">
+                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#reset_password')}" />
+                      </svg>Pozabljeno geslo</span>
+                  </a>
+                </li>
+              </apex:outputPanel>
+              <apex:outputPanel layout="none" rendered="{!isMember}">
+                <li class="slds-dropdown__item" role="presentation" id="errorTab">
+                  <a href="{!$Site.Prefix}/pregledNekupljenih" role="menuitem" tabindex="-1">
+                    <span class="slds-truncate" title="Košarica">
+                      <svg class="slds-icon slds-icon_x-small slds-icon-text-default slds-m-right_x-small" aria-hidden="true">
+                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#package')}" />
+                      </svg>Shranjene neplačane vozovnice</span>
+                  </a>
+                </li>
+                <li class="slds-dropdown__item" role="presentation" id="pregledKupljenih">
+                  <a href="{!$Site.Prefix}/pregledKupljenih" role="menuitem" tabindex="-1">
+                    <span class="slds-truncate" title="Pretekli nakupi">
+                      <svg class="slds-icon slds-icon_x-small slds-icon-text-default slds-m-right_x-small" aria-hidden="true">
+                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#package_org')}" />
+                      </svg>Pregled kupljenih vozovnic</span>
+                  </a>
+                </li>
+                <li class="slds-dropdown__item" role="presentation" id="errorTab">
+                  <a href="{!$Site.Prefix}/UrejanjePodatkov" role="menuitem" tabindex="-1">
+                    <span class="slds-truncate" title="Uredi račun">
+                      <svg class="slds-icon slds-icon_x-small slds-icon-text-default slds-m-right_x-small" aria-hidden="true">
+                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#edit')}" />
+                      </svg>Uredi račun</span>
+                  </a>
+                </li>
+                <li class="slds-dropdown__item logoutli" role="presentation" id="logoutli">
+                  <a href="{!$Site.Prefix}/secur/logout.jsp" role="menuitem" tabindex="-1">
+                    <span class="slds-truncate" title="Odjava">
+                      <svg class="slds-icon slds-icon_x-small slds-icon-text-default slds-m-right_x-small" aria-hidden="true">
+                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#power')}" />
+                      </svg>Odjava</span>
+                  </a>
+                </li>
+              </apex:outputPanel>
+              <!-- <li class="slds-dropdown__header slds-has-divider_top-space" role="separator">
+                <span class="slds-text-title_caps">Menu header</span>
+              </li>
+              <li class="slds-dropdown__item" role="presentation">
+                <a href="javascript:void(0);" role="menuitem" tabindex="-1">
+                  <span class="slds-truncate" title="Menu Item One">Menu Item One</span>
+                </a>
+              </li>
+              <li class="slds-dropdown__item" role="presentation">
+                <a href="javascript:void(0);" role="menuitem" tabindex="-1">
+                  <span class="slds-truncate" title="Menu Item Two">Menu Item Two</span>
+                </a>
+              </li>
+              <li class="slds-dropdown__item" role="presentation">
+                <a href="javascript:void(0);" role="menuitem" tabindex="-1">
+                  <span class="slds-truncate" title="Menu Item Three">Menu Item Three</span>
+                </a>
+              </li> -->
+            </ul>
+          </div>
+        </li>
+
+        
+
+        <!-- <li class="slds-context-bar__item" id="timeTableTab">
+          <a href="/evozovnice/vozniRed" class="slds-context-bar__label-action" title="Menu Item">
+            <span class="slds-truncate" title="Menu Item">Nakup vozovnice</span>
+          </a>
+        </li> -->
+        <!-- <li class="slds-context-bar__item">
+          <a href="javascript:void(0);" class="slds-context-bar__label-action" title="Menu Item">
+            <span class="slds-truncate" title="Menu Item">Menu Item</span>
+          </a>
+        </li>
+        <li class="slds-context-bar__item">
+          <a href="javascript:void(0);" class="slds-context-bar__label-action" title="Menu Item">
+            <span class="slds-truncate" title="Menu Item">Menu Item</span>
+          </a>
+        </li> -->
+      </ul>
+    </nav>
+  </div>
+</div>
+
+</apex:component>

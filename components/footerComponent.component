@@ -1,0 +1,12 @@
+<apex:component >
+	<!-- FOOTER -->
+	<footer role="contentinfo" class="slds-p-around--large">
+	  <!-- LAYOUT GRID -->
+	  <div class="slds-grid slds-grid--align-spread">
+	    <p class="slds-col">eVlak&trade; - enostaven nakup vozovnic za vlak <span style="font-size: 14pt;">&#9786;</span></p>
+	    <p class="slds-col">&copy;Tilen Golob</p>
+	  </div>
+	  <!-- / LAYOUT GRID -->
+	</footer>
+	<!-- / FOOTER -->
+</apex:component>
