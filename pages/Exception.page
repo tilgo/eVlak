@@ -1,0 +1,54 @@
+<apex:page controller="VozniRedController" docType="html-5.0" sideBar="false" showHeader="false">
+    <head>
+        <apex:includeScript value="{!$Resource.jquery321}"  />
+        <apex:includeScript value="{!$Resource.momentMinJS2181}"/>
+        <apex:includeScript value="{!URLFOR($Resource.aljs310, 'jquery.aljs-all.min.js')}"/>
+        <title>eVlak - vozni red</title>
+
+        <apex:stylesheet value="{!URLFOR($Resource.fa_470,'font-awesome-4.7.0/css/font-awesome.css')}"/>
+        <!--apex:stylesheet value="{!URLFOR($Resource.slds232, '/assets/styles/salesforce-lightning-design-system.css')}"/-->
+        <apex:slds />
+
+
+        
+    </head>
+
+    <body>
+        <div class="tilgo">
+          <div class="slds-grid slds-wrap">
+            <div class="slds-size_1-of-12"/>
+            <div class="slds-size_10-of-12" style="margin-top: 5px;">
+              <c:globalNavigationComponent imeStrani="homeTab"/>
+              <apex:form>
+          
+                <apex:outputPanel id="error-toast">
+                    <div class="slds-notify_container">
+                        <div class="slds-notify slds-notify_toast slds-theme_info" role="alert">
+                            <span class="slds-assistive-text">{!$Label.site.error}</span>
+                            <span class="slds-icon_container slds-icon-utility-info slds-m-right_small slds-no-flex slds-align-top" title="{!$Label.site.error}">
+                                <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#warning')}"></use>
+                                </svg>
+                            </span>
+                            <div class="slds-notify__content">
+                                <h2 class="slds-text-heading_small">{!$Label.site.error}:</h2>
+                                <p>{!$Site.ErrorDescription}</p>
+                            </div>
+                          <apex:commandLink onclick="$(this).attr('disabled',true); $(this).addClass('slds-hide');" styleClass="slds-button slds-button_icon slds-notify__close slds-button_icon-inverse" immediate="true" rerender="error-toast">
+                                <svg aria-hidden="true" class="slds-button__icon slds-button__icon--large">
+                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/action-sprite/svg/symbols.svg#close')}"></use>
+                                </svg>
+                                <span class="slds-assistive-text">Close</span>
+                          </apex:commandLink>
+                        </div>
+                    </div>
+                </apex:outputPanel>
+
+              </apex:form>
+              <c:footerComponent /> 
+            </div>
+            <div class="slds-size_1-of-12"/>
+          </div>
+        </div>
+    </body>             
+</apex:page>

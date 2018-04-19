@@ -1,0 +1,243 @@
+<apex:page controller="UrejanjePodatkovController" docType="html-5.0" sideBar="false" showHeader="false">
+    <head>
+        <apex:includeScript value="{!$Resource.jquery321}"  />
+        <apex:includeScript value="{!$Resource.momentMinJS2181}"/>
+        <apex:includeScript value="{!URLFOR($Resource.aljs310, 'jquery.aljs-all.min.js')}"/>
+        <title>eVlak - urejanje podatkov uporabnika</title>
+
+        <apex:stylesheet value="{!URLFOR($Resource.fa_470,'font-awesome-4.7.0/css/font-awesome.css')}"/>
+        <!--apex:stylesheet value="{!URLFOR($Resource.slds232, '/assets/styles/salesforce-lightning-design-system.css')}"/-->
+        <apex:slds />
+
+        <style>
+            article.slds-card#vozniRedCard {
+                /*color: #000000; */
+                /*background-color: #9ad3de;*/
+                background: rgb(240,249,255); /* Old browsers */
+                background: -moz-linear-gradient(top, rgba(240,249,255,1) 0%, rgba(240,249,255,1) 16%, rgba(203,235,255,1) 52%, rgba(161,219,255,1) 100%); /* FF3.6-15 */
+                background: -webkit-linear-gradient(top, rgba(240,249,255,1) 0%,rgba(240,249,255,1) 16%,rgba(203,235,255,1) 52%,rgba(161,219,255,1) 100%); /* Chrome10-25,Safari5.1-6 */
+                background: linear-gradient(to bottom, rgba(240,249,255,1) 0%,rgba(240,249,255,1) 16%,rgba(203,235,255,1) 52%,rgba(161,219,255,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+                filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f0f9ff', endColorstr='#a1dbff',GradientType=0 ); /* IE6-9 */
+            }
+
+            article.slds-card#vozniRedTabela {
+                background: rgb(161,219,255); /* Old browsers */
+				background: -moz-linear-gradient(top, rgba(161,219,255,1) -1%, rgba(203,235,255,1) 42%, rgba(240,249,255,1) 86%, rgba(240,249,255,1) 100%); /* FF3.6-15 */
+				background: -webkit-linear-gradient(top, rgba(161,219,255,1) -1%,rgba(203,235,255,1) 42%,rgba(240,249,255,1) 86%,rgba(240,249,255,1) 100%); /* Chrome10-25,Safari5.1-6 */
+				background: linear-gradient(to bottom, rgba(161,219,255,1) -1%,rgba(203,235,255,1) 42%,rgba(240,249,255,1) 86%,rgba(240,249,255,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+				filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a1dbff', endColorstr='#f0f9ff',GradientType=0 ); /* IE6-9 */
+            }
+
+            .slds-icon-text-warning  {
+                fill: #0099FF !important;
+            }
+
+            .centerAlignment {
+            	text-align: center !important;
+            }
+            
+        </style>
+
+        <script>
+            //moment().locale('de-de');
+
+            
+
+            $(document).ready(function() {
+                $('[data-aljs="popover"]').popover({
+                    theme: 'info'
+                });
+
+                
+            });
+
+            var assetsLocation = '{!URLFOR($Asset.SLDS)}';
+
+            $.aljsInit({ // Below are the new defaults
+                assetsLocation: assetsLocation,
+                scoped: true,
+                scopingClass: 'tilgo'
+            });
+
+            function validate() {
+				debugger;
+				var error = false;
+				if (typeof $('.imeClass').val() === "undefined" || $('.imeClass').val() === "") {
+					error = true;
+					$('.imeDiv').addClass('slds-has-error');
+				}
+				if (typeof $('.priimekClass').val() === "undefined" || $('.priimekClass').val() === "") {
+					error = true;
+					$('.priimekDiv').addClass('slds-has-error');
+				}
+
+				if(!error) {
+					shraniPodatkeUporabnika();
+				}
+
+				//$('.inputDiv').removeClass('slds-has-error');
+				
+			}
+
+
+        </script>
+    </head>
+
+    <body>
+        <div class="tilgo">
+            <div class="slds-grid slds-wrap">
+            <div class="slds-size_1-of-12"/>
+            <div class="slds-size_10-of-12" style="margin-top: 5px;">
+                <apex:form >
+
+                    <!-- <apex:actionFunction action="{!setSearchToFalse}" name="setSearchToFalse" oncomplete="return false;" status="status" rerender="vozni-red, map-iframe, error-toast"/> -->
+                    <apex:actionFunction name="shraniPodatkeUporabnika" action="{!shraniPodatke}" reRender="navComp, vozni-red" oncomplete="location.reload();"/>
+
+                    <apex:outputPanel layout="none" id="navComp">
+                    	<c:globalNavigationComponent imeStrani="urejanjePodatkov"/>
+                	</apex:outputPanel>
+
+                    <apex:outputPanel id="error-toast">
+                    <apex:outputPanel rendered="{!isError}">
+                        <div class="slds-notify_container">
+                            <div class="slds-notify slds-notify_toast slds-theme_info" role="alert">
+                                <span class="slds-assistive-text">Napaka</span>
+                                <span class="slds-icon_container slds-icon-utility-info slds-m-right_small slds-no-flex slds-align-top" title="Napaka">
+                                    <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#warning')}"></use>
+                                    </svg>
+                                </span>
+                                <div class="slds-notify__content">
+                                    <h2 class="slds-text-heading_small">Napaka:</h2>
+                                    <p>{!errorMsg}</p>
+                                </div>
+                                <!-- <apex:commandButton styleClass="slds-button slds-button_icon slds-notify__close slds-button_icon-inverse" title="Close">
+                                    <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+                                    </svg>
+                                    <span class="slds-assistive-text">Close</span>
+                                </apex:commandButton>
+ -->                          <apex:commandLink onclick="$(this).attr('disabled',true);" action="{!resetError}" styleClass="slds-button slds-button_icon slds-notify__close slds-button_icon-inverse" immediate="true" rerender="error-toast">
+                                    <svg aria-hidden="true" class="slds-button__icon slds-button__icon--large">
+                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/action-sprite/svg/symbols.svg#close')}"></use>
+                                    </svg>
+                                    <span class="slds-assistive-text">Close</span>
+                              </apex:commandLink>
+                            </div>
+                        </div>
+                    </apex:outputPanel>
+                    </apex:outputPanel>
+
+
+                    <!-- <div class="slds-grid slds-wrap" style="margin-top: 5px;">
+                        <div class="slds-size_1-of-4"/>
+                        <div class="slds-size_2-of-4">
+                            <c:carouselComponent/>
+                        </div>
+                        <div class="slds-size_1-of-4"/>
+                    </div> -->
+
+                    <!-- <article class="slds-card" id="banner" style="margin-top: 5px; height: 250px;">
+                        <div class="slds-card__body">
+                        </div>
+                    </article> -->
+
+
+            <!-- VOZNI RED -->
+                    <apex:outputPanel id="vozni-red">
+                    <apex:outputPanel rendered="true">
+                        <article class="slds-card slds-m-bottom_medium" style="margin-top: 5px;" id="vozniRedTabela">
+                          	<div class="slds-card__header slds-grid slds-einstein-header">
+                            	<header class="slds-media slds-media_center slds-has-flexi-truncate">
+                              		<div class="slds-media__figure">
+                                		<span class="slds-icon_container slds-icon-standard-hierarchy" title="">
+                                  			<svg class="slds-icon slds-icon_small" aria-hidden="true">
+                                    			<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/standard-sprite/svg/symbols.svg#drafts')}" />
+                                  			</svg>
+                                		</span>
+                              		</div>
+                              		<div class="slds-media__body">
+                                		<h2>
+                                    		<span class="slds-text-heading_small">Urejanje podatkov profila</span>
+                                		</h2>
+                              		</div>
+                        		</header>
+                            	<div class="slds-no-flex">
+                            		<!-- buttons -->
+                        		</div>
+                          	</div>
+
+                          	<div class="slds-card__body">
+                          		<div class="slds-grid slds-wrap">
+	        						<div class="slds-size_1-of-12"/>
+	        						<div class="slds-size_4-of-12">
+			                          	<div class="slds-form-element slds-m-top_medium imeDiv">
+										  	<label class="slds-form-element__label" for="ime">Ime:</label>
+										  	<div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_left">
+										    	<svg class="slds-icon slds-input__icon slds-input__icon_left slds-icon-text-default" aria-hidden="true">
+										      		<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#identity')}" />
+										    	</svg>
+										    	<!-- <input type="text" id="text-input-id-1" class="slds-input" placeholder="Vpišite e-mail naslov" /> -->
+										    	<apex:inputField id="ime" styleClass="imeClass slds-input" onkeyup="deleteError('imeDiv');" value="{!currUser.FirstName}" type="text" html-placeholder="Vpišite vaše ime"/>
+										  	</div>
+										</div>
+									</div>
+
+									<div class="slds-size_1-of-12"/>
+
+									<div class="slds-size_4-of-12">
+										<div class="slds-form-element slds-m-top_medium priimekDiv">
+										  	<label class="slds-form-element__label" for="priimek">Priimek:</label>
+										  	<div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_left">
+										    	<svg class="slds-icon slds-input__icon slds-input__icon_left slds-icon-text-default" aria-hidden="true">
+										      		<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#identity')}" />
+										    	</svg>
+										    	<!-- <input type="text" id="text-input-id-1" class="slds-input" placeholder="Vpišite e-mail naslov" /> -->
+										    	<apex:inputField id="priimek" styleClass="priimekClass slds-input" onkeyup="deleteError('priimekDiv');" value="{!currUser.LastName}" type="text" html-placeholder="Vpišite vaš priimek"/>
+										  	</div>
+										</div>
+									</div>
+									<div class="slds-size_1-of-12"/>
+                          		</div>
+
+                          		<div class="slds-size_11-of-12">
+		                            <apex:commandButton styleClass="slds-button slds-button_neutral slds-align_absolute-center" status="status" style="margin-top: 30px; width: 50%;" onclick="validate();" value="Shrani podatke" oncomplete="location.reload();">
+		                        	</apex:commandButton>
+	                        	</div>
+                      		</div>
+
+                          <footer class="slds-card__footer"></footer>
+                        </article>
+
+                        <script>
+                            $('[data-aljs="popover"]').popover({
+                                theme: 'info'
+                            });
+                        </script>
+                    </apex:outputPanel>
+                    </apex:outputPanel>
+
+
+                    
+                    <apex:outputPanel layout="none">
+                        <apex:actionstatus id="status">
+                           <apex:facet name="start">
+                               <div class="slds-spinner_container" style="z-index: 9999; position: fixed;">
+                                   <div class="slds-spinner--brand slds-spinner slds-spinner--medium" aria-hidden="false" role="alert">
+                                        <div class="slds-spinner__dot-a"></div>
+                                        <div class="slds-spinner__dot-b"></div>
+                                   </div>
+                               </div>
+                           </apex:facet>
+                       </apex:actionstatus>
+                   </apex:outputPanel>
+
+           
+                    <c:footerComponent />      
+                </apex:form>
+            </div>
+            <div class="slds-size_1-of-12"/>
+            </div>
+        </div>
+    </body>             
+</apex:page>

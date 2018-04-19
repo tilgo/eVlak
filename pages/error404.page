@@ -1,0 +1,73 @@
+<apex:page showHeader="false" sidebar="false" docType="html-5.0">
+	<style type="text/css">
+		body {
+		    font-family: "Whitney SSm A", "Whitney SSm B", "Helvetica Neue", Helvetica, Arial, Sans-Serif;
+		    background-color: #0090ff;
+		    color: #fff;
+		    -moz-font-smoothing: antialiased;
+		    -webkit-font-smoothing: antialiased;
+		}
+		html, body {
+		    margin: 0;
+		    padding: 0;
+		    height: 100%;
+		}
+
+		
+
+		/*body {
+		    display: block;
+		    margin: 8px;
+		}*/
+		/*@media (min-width: 768px)
+		.error-container h1 {
+		    font-size: 220px;
+		}
+		@media (min-width: 480px)
+		.error-container h1 {
+		    position: relative;
+		    top: 50%;
+		    -webkit-transform: translateY(-50%);
+		    -ms-transform: translateY(-50%);
+		    transform: translateY(-50%);
+		}*/
+		.error-container h1 {
+		    margin: 0;
+		    font-size: 500px;
+		    font-weight: 300;
+		}
+		.verticalAlign {
+			vertical-align: center;
+		}
+		h1 {
+		    display: block;
+		    font-size: 4em;
+		    -webkit-margin-before: 0.67em;
+		    -webkit-margin-after: 0.67em;
+		    -webkit-margin-start: 0px;
+		    -webkit-margin-end: 0px;
+		    font-weight: bold;
+		}
+		.error-container {
+		    text-align: center;
+		    height: 100%;
+		}
+		a {
+
+			color: #f80;
+		}
+		a:hover {
+
+			color: #f80;
+		}
+	</style>
+
+	<body>
+		<div class="error-container">
+			<div class="verticalAlign">
+				<h1>404</h1>
+		  		<p class="return">Nazaj na spletno aplikacijo <a href="/evlak/vozniRed" style="font-size: 14px;"><b>eVlak</b></a></p>
+			</div>
+		</div>
+	</body>
+</apex:page>

@@ -1,0 +1,350 @@
+<apex:page controller="PregledKupljenihController" docType="html-5.0" sideBar="false" showHeader="false">
+    <head>
+        <apex:includeScript value="{!$Resource.jquery321}"  />
+        <apex:includeScript value="{!$Resource.momentMinJS2181}"/>
+        <apex:includeScript value="{!URLFOR($Resource.aljs310, 'jquery.aljs-all.min.js')}"/>
+        <title>eVlak - pregled kupljenih vozovnic</title>
+
+        <apex:stylesheet value="{!URLFOR($Resource.fa_470,'font-awesome-4.7.0/css/font-awesome.css')}"/>
+        <!--apex:stylesheet value="{!URLFOR($Resource.slds232, '/assets/styles/salesforce-lightning-design-system.css')}"/-->
+        <apex:slds />
+
+        <style>
+            article.slds-card#vozniRedCard {
+                /*color: #000000; */
+                /*background-color: #9ad3de;*/
+                background: rgb(240,249,255); /* Old browsers */
+                background: -moz-linear-gradient(top, rgba(240,249,255,1) 0%, rgba(240,249,255,1) 16%, rgba(203,235,255,1) 52%, rgba(161,219,255,1) 100%); /* FF3.6-15 */
+                background: -webkit-linear-gradient(top, rgba(240,249,255,1) 0%,rgba(240,249,255,1) 16%,rgba(203,235,255,1) 52%,rgba(161,219,255,1) 100%); /* Chrome10-25,Safari5.1-6 */
+                background: linear-gradient(to bottom, rgba(240,249,255,1) 0%,rgba(240,249,255,1) 16%,rgba(203,235,255,1) 52%,rgba(161,219,255,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+                filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f0f9ff', endColorstr='#a1dbff',GradientType=0 ); /* IE6-9 */
+            }
+
+            article.slds-card#vozniRedTabela {
+                background: rgb(161,219,255); /* Old browsers */
+				background: -moz-linear-gradient(top, rgba(161,219,255,1) -1%, rgba(203,235,255,1) 42%, rgba(240,249,255,1) 86%, rgba(240,249,255,1) 100%); /* FF3.6-15 */
+				background: -webkit-linear-gradient(top, rgba(161,219,255,1) -1%,rgba(203,235,255,1) 42%,rgba(240,249,255,1) 86%,rgba(240,249,255,1) 100%); /* Chrome10-25,Safari5.1-6 */
+				background: linear-gradient(to bottom, rgba(161,219,255,1) -1%,rgba(203,235,255,1) 42%,rgba(240,249,255,1) 86%,rgba(240,249,255,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+				filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a1dbff', endColorstr='#f0f9ff',GradientType=0 ); /* IE6-9 */
+            }
+
+            .slds-icon-text-warning  {
+                fill: #0099FF !important;
+            }
+
+            .centerAlignment {
+            	text-align: center !important;
+            }
+            
+        </style>
+
+        <script>
+            //moment().locale('de-de');
+
+            
+
+            $(document).ready(function() {
+                $('[data-aljs="popover"]').popover({
+                    theme: 'info'
+                });
+
+                
+            });
+
+            var assetsLocation = '{!URLFOR($Asset.SLDS)}';
+
+            $.aljsInit({ // Below are the new defaults
+                assetsLocation: assetsLocation,
+                scoped: true,
+                scopingClass: 'tilgo'
+            });
+
+
+        </script>
+    </head>
+
+    <body>
+        <div class="tilgo">
+            <div class="slds-grid slds-wrap">
+            <div class="slds-size_1-of-12"/>
+            <div class="slds-size_10-of-12" style="margin-top: 5px;">
+                <apex:form >
+
+                    <!-- <apex:actionFunction action="{!setSearchToFalse}" name="setSearchToFalse" oncomplete="return false;" status="status" rerender="vozni-red, map-iframe, error-toast"/> -->
+
+                    <c:globalNavigationComponent imeStrani="pregledKupljenih"/>
+
+                    <apex:outputPanel id="error-toast">
+                    <apex:outputPanel rendered="{!isError}">
+                        <div class="slds-notify_container">
+                            <div class="slds-notify slds-notify_toast slds-theme_info" role="alert">
+                                <span class="slds-assistive-text">Napaka</span>
+                                <span class="slds-icon_container slds-icon-utility-info slds-m-right_small slds-no-flex slds-align-top" title="Napaka">
+                                    <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#warning')}"></use>
+                                    </svg>
+                                </span>
+                                <div class="slds-notify__content">
+                                    <h2 class="slds-text-heading_small">Napaka:</h2>
+                                    <p>{!errorMsg}</p>
+                                </div>
+                                <!-- <apex:commandButton styleClass="slds-button slds-button_icon slds-notify__close slds-button_icon-inverse" title="Close">
+                                    <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+                                    </svg>
+                                    <span class="slds-assistive-text">Close</span>
+                                </apex:commandButton>
+ -->                          <apex:commandLink onclick="$(this).attr('disabled',true);" action="{!resetError}" styleClass="slds-button slds-button_icon slds-notify__close slds-button_icon-inverse" immediate="true" rerender="error-toast">
+                                    <svg aria-hidden="true" class="slds-button__icon slds-button__icon--large">
+                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/action-sprite/svg/symbols.svg#close')}"></use>
+                                    </svg>
+                                    <span class="slds-assistive-text">Close</span>
+                              </apex:commandLink>
+                            </div>
+                        </div>
+                    </apex:outputPanel>
+                    </apex:outputPanel>
+
+
+                    <!-- <div class="slds-grid slds-wrap" style="margin-top: 5px;">
+                        <div class="slds-size_1-of-4"/>
+                        <div class="slds-size_2-of-4">
+                            <c:carouselComponent/>
+                        </div>
+                        <div class="slds-size_1-of-4"/>
+                    </div> -->
+
+                    <!-- <article class="slds-card" id="banner" style="margin-top: 5px; height: 250px;">
+                        <div class="slds-card__body">
+                        </div>
+                    </article> -->
+
+
+                    
+            <!-- VOZNI RED -->
+                    <apex:outputPanel id="vozni-red">
+                    <apex:outputPanel rendered="true">
+                        <article class="slds-card slds-m-bottom_medium" style="margin-top: 5px;" id="vozniRedTabela">
+                          <div class="slds-card__header slds-grid slds-einstein-header">
+                            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                              <div class="slds-media__figure">
+                                <span class="slds-icon_container slds-icon-standard-hierarchy" title="">
+                                  <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/standard-sprite/svg/symbols.svg#drafts')}" />
+                                  </svg>
+                                </span>
+                              </div>
+                              <div class="slds-media__body">
+                                <h2>
+                                  <!-- <a href="javascript:void(0);" class="slds-card__header-link slds-truncate" title="[object Object]"> -->
+                                    <span class="slds-text-heading_small">Pregled kupljenih vozovnic</span>
+                                  <!-- </a> -->
+                                </h2>
+                              </div>
+                            </header>
+                            <div class="slds-no-flex">
+                              <!-- <apex:commandButton styleClass="slds-button slds-button_neutral" action="{!toggleMap}" rerender="map-iframe, vozni-red" status="status" value="{!IF(showMap, 'Skrij zemljevid', 'Prikaži na zemljevidu')}"></apex:commandButton> -->
+                            </div>
+                          </div>
+                          <div class="slds-card__body">
+                            <apex:outputPanel rendered="{!vozovnice != null && vozovnice.size > 0}">
+                              <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                                  <thead>
+                                    <tr class="slds-text-title_caps">
+                                      <th scope="col">
+                                        <div class="slds-truncate centerAlignment" title="Številka vlaka">Vstopna postaja</div>
+                                      </th>
+                                      <th scope="col">
+                                        <div class="slds-truncate centerAlignment" title="Vstopna postaja">Izstopna postaja</div>
+                                      </th>
+                                      <th scope="col">
+                                        <div class="slds-truncate centerAlignment" title="Ura odhoda">Povratna vozovnica</div>
+                                      </th>
+                                      <th scope="col">
+                                        <div class="slds-truncate centerAlignment" title="Izstopna postaja">Cena</div>
+                                      </th>
+                                      <th scope="col">
+                                        <div class="slds-truncate centerAlignment" title="Ura prihoda">Število vozovnic</div>
+                                      </th>
+                                      <!-- <th scope="col">
+                                        <div class="slds-truncate" title="Stage">Čas</div>
+                                      </th> -->
+                                      <th scope="col">
+                                        <div class="slds-truncate centerAlignment" title="Razdalja">Dan veljave</div>
+                                      </th>
+                                      <th scope="col">
+                                        <div class="slds-truncate centerAlignment" title="Cena standardne vozovnice">
+                                            Status <span class="slds-show--inline-block slds-p-around--x-small" tabindex="1" data-aljs="popover" data-aljs-placement="top" title="Neaktivna - vozovnica, ki je bila porabljena oz. je že potekla (vozovnic v tem statusu, ni več mogoče natisniti). Aktivna - vozovnica, ki še ni bila porabljena oz. še ni potekla.">
+                                                    <svg aria-hidden="true" class="slds-input__icon slds-icon--x-small slds-icon-text-warning" html-disabled="true">
+                                                        <use xmlns:xlink="http://www.w3.org/1999/xlink"  xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#info_alt')}"></use>
+                                                    </svg>
+                                                </span>
+                                        </div>
+                                      </th>
+                                      <th scope="col">
+                                        <div class="slds-truncate" title=""></div>
+                                      </th>
+
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <apex:repeat value="{!vozovnice}" var="v">
+                                        <tr>
+                                            <td class="slds-truncate centerAlignment" >{!v.Postaja_Od__r.Name}</td>
+                                            <td class="slds-truncate centerAlignment">{!v.Postaja_Do__r.Name}</td>
+                                            <td class="slds-truncate centerAlignment">
+                                                {!IF(v.Povratna_Vozovnica__c, 'Da', 'Ne')}
+                                            </td>
+                                            <td class="slds-truncate centerAlignment"><apex:outputField value="{!v.Cena_Vozovnice__c}"/>€</td>
+                                            <td class="slds-truncate centerAlignment">{!v.Stevilo_Vozovnic__c}</td>
+                                            <td class="slds-truncate centerAlignment"><apex:outputText value="{0,date,dd. MM. yyyy}"> <apex:param value="{!v.Datum_Veljave__c}" /> </apex:outputText></td>
+                                            <!-- <td class="slds-truncate">Calculate time</td> -->
+                                            <td class="slds-truncate centerAlignment">{!IF(v.Porabljena_Vozovnica_Final__c, 'Neaktivna', 'Aktivna')}</td>
+
+                                            
+                                            <td title="Nakup">
+                                                <div class="slds-truncate" title="Nakup">
+                                                	<apex:outputPanel rendered="{!!v.Porabljena_Vozovnica_Final__c}">
+                                                    	<a href="{!$Site.Prefix}/VozovnicaPDF?id={!v.Id}" target="_blank" role="menuitem" tabindex="-1" class="slds-button slds-button_neutral" style="width: 100%;">Natisni</a>
+                                                    </apex:outputPanel>
+                                                </div>
+                                            </td>
+                                            
+                                        </tr>
+                                    </apex:repeat>
+                                    <!-- <tr>
+                                      <th scope="row" data-label="Opportunity Name">
+                                        <div class="slds-truncate" title="Cloudhub"><a href="javascript:void(0);">LP 1802</a></div>
+                                      </th>
+                                      <td data-label="Account Name">
+                                        <div class="slds-truncate" title="Cloudhub">Borovnica</div>
+                                      </td>
+                                      <td data-label="Account Name">
+                                        <div class="slds-truncate" title="Cloudhub">14.02</div>
+                                      </td>
+                                      <td data-label="Account Name">
+                                        <div class="slds-truncate" title="Cloudhub">Ljubljana</div>
+                                      </td>
+                                      <td data-label="Close Date">
+                                        <div class="slds-truncate" title="4/14/2015">14.22</div>
+                                      </td>
+                                      <td data-label="Prospecting">
+                                        <div class="slds-truncate" title="Prospecting">20 min</div>
+                                      </td>
+                                      <td data-label="Confidence">
+                                        <div class="slds-truncate" title="20%">2.34 €</div>
+                                      </td>
+                                      <td data-label="Amount">
+                                        <div class="slds-truncate" title="$25k">
+                                            <button class="slds-button slds-button_brand" style="width: 100%;">Nakup</button>
+                                        </div>
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <th scope="row" data-label="Opportunity Name">
+                                        <div class="slds-truncate" title="Cloudhub"><a href="javascript:void(0);">LP 1802</a></div>
+                                      </th>
+                                      <td data-label="Account Name">
+                                        <div class="slds-truncate" title="Cloudhub">Borovnica</div>
+                                      </td>
+                                      <td data-label="Account Name">
+                                        <div class="slds-truncate" title="Cloudhub">14.02</div>
+                                      </td>
+                                      <td data-label="Account Name">
+                                        <div class="slds-truncate" title="Cloudhub">Ljubljana</div>
+                                      </td>
+                                      <td data-label="Close Date">
+                                        <div class="slds-truncate" title="4/14/2015">14.22</div>
+                                      </td>
+                                      <td data-label="Prospecting">
+                                        <div class="slds-truncate" title="Prospecting">20 min</div>
+                                      </td>
+                                      <td data-label="Confidence">
+                                        <div class="slds-truncate" title="20%">2.34 €</div>
+                                      </td>
+                                      <td data-label="Amount">
+                                        <div class="slds-truncate" title="$25k">
+                                            <button class="slds-button slds-button_brand" style="width: 100%;">Nakup</button>
+                                        </div>
+                                      </td>
+                                    </tr> -->
+                                  </tbody>
+                                </table>
+                            </apex:outputPanel>
+
+                            <apex:outputPanel rendered="{!vozovnice == null || vozovnice.size <= 0}" >
+                                <span class="slds-icon_container slds-icon-utility-dislike slds-align_absolute-center" title="">
+                                    <svg class="slds-icon slds-icon_large slds-icon-text-default" aria-hidden="true">
+                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#deprecate')}" />
+                                    </svg>
+                                    <span class="slds-assistive-text">Description of icon when needed</span>
+                                </span>
+                                <br/>
+                                <div class="slds-align_absolute-center">
+                                    Hmmm... Izgleda, da še nimate nobene kupljene vozovnice oz. podatki trenutno niso na voljo.
+                                </div>
+                                
+                            </apex:outputPanel>
+                          </div>
+                          <footer class="slds-card__footer"></footer>
+                        </article>
+
+                        <script>
+                            $('[data-aljs="popover"]').popover({
+                                theme: 'info'
+                            });
+                        </script>
+                    </apex:outputPanel>
+                    </apex:outputPanel>
+
+
+                    <!-- <div class="slds-page-header">
+                        <div class="slds-media">
+                            <div class="slds-media__figure">
+                                <span class="slds-icon_container slds-icon-standard-opportunity" title="Description of icon when needed">
+                                    <svg aria-hidden="true" class="slds-icon">
+                                        <use xmlns:xlink="http://www.w3.org/1999/xlink"  xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/standard-sprite/svg/symbols.svg#case_milestone')}"></use>
+                                    </svg>
+                                </span>
+                            </div>
+                            <div class="slds-media__body">
+                                <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Vozni red">Iskanje vozovnice</h1>
+                            </div>
+                        </div>
+                    </div> -->
+
+                    <!-- <apex:actionStatus id="status">
+                        <apex:facet name="start">
+                            <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.75; z-index: 1000; background-color: black;">
+                                &nbsp;
+                            </div>
+                            <div style="position: fixed; left: 0; top: 0; bottom: 0; right: 0; z-index: 1001; margin: 30% 50%">
+                                <img src="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#spinner')}" />
+                                <!- - <i style="color: red" class="fa fa-user-circle fa-2x" aria-hidden="true"></i>   - ->
+                            </div>
+                            <script>debugger;</script>
+                        </apex:facet>
+                        <script>debugger;</script>
+                    </apex:actionStatus> -->
+                    <apex:outputPanel layout="none">
+                        <apex:actionstatus id="status">
+                           <apex:facet name="start">
+                               <div class="slds-spinner_container" style="z-index: 9999; position: fixed;">
+                                   <div class="slds-spinner--brand slds-spinner slds-spinner--medium" aria-hidden="false" role="alert">
+                                        <div class="slds-spinner__dot-a"></div>
+                                        <div class="slds-spinner__dot-b"></div>
+                                   </div>
+                               </div>
+                           </apex:facet>
+                       </apex:actionstatus>
+                   </apex:outputPanel>
+
+           
+                    <c:footerComponent />      
+                </apex:form>
+            </div>
+            <div class="slds-size_1-of-12"/>
+            </div>
+        </div>
+    </body>             
+</apex:page>

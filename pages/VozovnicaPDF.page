@@ -1,0 +1,114 @@
+<apex:page standardController="Vozovnica__c" showHeader="false" showChat="false" showQuickActionVfHeader="false" 
+           sidebar="false" standardStylesheets="false"
+           applyHtmlTag="false" applyBodyTag="false" renderAs="pdf" contentType="text/html; charset=UTF-8">
+    <head>
+        <style> 
+            body { font-family: 'Arial Unicode MS'; }
+            /*table, th, td {
+			   border: 1px solid black;
+			}*/
+			.rightAlignment {
+				text-align: right;
+				margin-right: 10px;
+				padding-right: 20px;
+			}
+			.leftAlignment {
+				text-align: left;
+				margin-left: 10px;
+				padding-left: 20px;
+			}
+			.topAlignment {
+				text-align: top;
+			}
+			.ribbon {
+			   position: relative;
+			   top: -58px;
+			   right: -5px;
+			}
+        </style>
+    </head>
+    
+    <body style="border: 5px dashed #4791F5; margin-bottom: 35px;  padding: 25px;">
+    	<apex:outputPanel rendered="{!Vozovnica__c.Placana__c && !Vozovnica__c.Porabljena_Vozovnica_Final__c}">
+	    	<!-- sloZelLogo -->
+	    	<table style="width: 100%;">
+			  	<thead>
+			    	<tr>
+			      		<th style="width: 30%;" class="topAlignment"><img class="ribbon" src="{!URLFOR($Resource.sloZelLogo)}" width="150"/></th>
+			      		<th style="width: 40%; font-size: 9pt; padding-top: 20px;" class="rightAlignment">eVozovnico lahko natisnete ali pa jo zgolj shranite na vaš telefon. <br/> eVozovnico s QR kodo, pokažete kontrolorju vozovnic na vlaku.</th>
+			      		<th style="width: 30%; padding-top: 20px;" class="rightAlignment"><apex:image width="130" url="{!Vozovnica__c.QR_Koda_Link__c}"/ ></th>
+			    	</tr>
+			  	</thead>
+		  	</table>
+	    		
+
+	    	<center><h1>eVozovnica za vlak</h1></center>
+	        
+	        <center>
+	        	<table style="width: 100%;">
+				  	<thead>
+				    	<tr>
+				      		<th class="rightAlignment" style="width: 30%;">Relacija:</th>
+				      		<th class="leftAlignment" colspan="2" style="width: 35%;">{!Vozovnica__c.Postaja_Od__r.Name}  
+				      			<span style="font-size: 18pt; padding-left:2em; padding-right: 2em;">
+				      				<apex:outputPanel rendered="{!Vozovnica__c.Povratna_Vozovnica__c}">
+				      					&hArr;
+				      				</apex:outputPanel>
+				      				<apex:outputPanel rendered="{!!Vozovnica__c.Povratna_Vozovnica__c}">
+				      					&rArr;
+				      				</apex:outputPanel>
+				      			</span>  {!Vozovnica__c.Postaja_Do__r.Name}</th>
+				    	</tr>
+				  	</thead>
+
+				  	<tbody>
+				    	<tr>
+				      		<td class="rightAlignment">Številka Vozovnice:</td>
+				      		<td colspan="2" class="leftAlignment"><apex:outputText value="{!Vozovnica__c.Name}"/></td>
+				    	</tr>
+				    	<tr>
+				      		<td class="rightAlignment">Datum veljavnosti:</td>
+				      		<td colspan="2" class="leftAlignment"><apex:outputText value="{0,date,dd. MM. yyyy}"> <apex:param value="{!Vozovnica__c.Datum_Veljave__c}" /> </apex:outputText></td>
+				    	</tr>
+				    	<tr>
+				      		<td class="rightAlignment">Tip vlaka:</td>
+				      		<td colspan="2" class="leftAlignment">LP / RG</td>
+				    	</tr>
+				    	<tr>
+				      		<td class="rightAlignment">Tip vozovnice:</td>
+				      		<td colspan="2" class="leftAlignment">Standardna vozovnica</td>
+				    	</tr>
+				    	<tr>
+				      		<td class="rightAlignment">Ime kupca:</td>
+				      		<td colspan="2" class="leftAlignment">{!Vozovnica__c.Kupec__r.Name}</td>
+				    	</tr>
+				    	<tr>
+				      		<td class="rightAlignment">Število potnikov:</td>
+				      		<td colspan="2" class="leftAlignment"> <apex:outputField value="{!Vozovnica__c.Stevilo_Vozovnic__c}"/></td>
+				    	</tr>
+				    	<tr>
+				      		<td class="rightAlignment">Povratna vozovnica:</td>
+				      		<td colspan="2" class="leftAlignment"> {!IF(Vozovnica__c.Povratna_Vozovnica__c, 'Da', 'Ne')} </td>
+				    	</tr>
+				    	<tr>
+				      		<td colspan="2" class="rightAlignment">Cena:</td>
+				      		<td class="leftAlignment"><apex:outputField value="{!Vozovnica__c.Cena_Vozovnice__c}"/>€ </td>
+				    	</tr>
+				  	</tbody>
+				</table>
+			</center>
+	             <!-- <apex:form>
+	      			<apex:image url="{!Vozovnica__c.QR_Koda__c}">
+	    			</apex:image>
+				</apex:form> -->
+				<!-- <apex:image url="http://cdn-image.foodandwine.com/sites/default/files/fwx-cystal-pepsi-logo.jpg"/ > -->
+				
+				<!-- {!Vozovnica__c.QR_Koda__c} -->
+		</apex:outputPanel>
+		<apex:outputPanel rendered="{!!Vozovnica__c.Placana__c || Vozovnica__c.Porabljena_Vozovnica_Final__c}">
+			<center><h1>Vozovnica še ni plačana ali pa je že potekla!</h1></center>
+		</apex:outputPanel>
+    </body>
+
+    <footer ><center><span style="padding-top: 100px;">eVlak - enostaven in hiter nakup vozonic na spletu</span></center></footer>
+</apex:page>

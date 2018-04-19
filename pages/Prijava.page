@@ -1,0 +1,90 @@
+<apex:page docType="html-5.0" title="Prijava na izpit" controller="prijavaController">
+	
+    <style>
+        body .bPageTitle .ptBody h1.noSecondHeader{
+    		font-size: 150%;
+        	color: #19c;
+        	background-color: lightgray;
+        	text-align: center;
+        	border-radius: 5px;
+        	font-family: Copperplate,Copperplate Gothic Light,fantasy; 
+  		}
+        body {
+            background-color: #fff;
+        }
+        
+        .prijava {
+            font-family: Verdana, Arial, Helvetica, sans-serif;
+            font-size: 90%;
+            padding-top: 12px;
+            width: 100%;
+        }
+        .prijava select {
+            width: 100%;
+            height: 35px;
+            -webkit-appearance: menulist;
+            padding: 0 8px;
+            margin: 4px 0;
+            line-height: 21px;
+            background-color: #fff;
+            border: 1px solid #19c;
+            border-radius: 3px;
+            outline: none;
+            font-family: Verdana, Arial, Helvetica, sans-serif;
+            font-size: 100%;
+        }
+        .prijava button {
+            -webkit-appearance: button;
+            border-radius: 3px;
+            display: block;
+            padding: 12px;
+            margin: 4px 0;
+            width: 100%;
+            color: white;
+            background: #19c;
+            border: solid 1px black;
+            font-family: Courier, "Lucida Console", monospace;
+            font-size: 100%;
+            font-weight: Semibold;
+        }
+    </style>
+    
+	<apex:sectionHeader title="Prijava študentov na izpit"/>
+    <apex:form styleClass="prijava" id="pr">
+        <apex:actionRegion >
+            <apex:selectList title="Izberite študenta" styleClass="drop" id="izbiraStudenta" value="{!student.Id}" size="1" required="true">
+                <i>Študent:</i>
+                <apex:selectOptions value="{!VsiStudenti}"/>
+                <apex:actionSupport event="onchange" rerender="predm, ro, pr" />
+            </apex:selectList>
+        </apex:actionRegion>
+        <apex:outputPanel layout="block" id="predm">
+            <apex:actionRegion >
+                <apex:selectList title="Izberite predmet" disabled="{!IF(student.Id != null, false, true)}" styleClass="drop" id="izbiraPredmeta" value="{!predmet.Id}" size="1" required="true">
+                    <br/>
+                    <i>Predmet:</i>
+                    <apex:selectOptions value="{!VsiPredmeti}"/>
+                    <apex:actionSupport event="onchange" rerender="ro, pr" />
+                </apex:selectList>
+            </apex:actionRegion>
+        </apex:outputPanel>
+        <apex:outputPanel layout="block" id="ro">
+            <apex:selectList title="Izberite rok" disabled="{!IF(predmet.Id != null && student.Id != null, false, true)}" styleClass="drop" id="izbiraRoka" value="{!rok.Id}" size="1" required="true">
+                <br/>
+                <i>Izpitni rok:</i>
+                <apex:selectOptions value="{!VsiRoki}"/>
+
+            </apex:selectList>
+        </apex:outputPanel>
+
+        <br/>
+        <br/>
+        <apex:actionFunction action="{!save}" name="save" />
+        <button onclick="save(); return false;">Prijavi</button>
+        <script>
+    		document.querySelectorAll('.prijava option:first-child').forEach(function(e) { e.disabled = true;});
+    	</script>
+    </apex:form>
+    
+    
+</apex:page>

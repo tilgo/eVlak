@@ -1,0 +1,284 @@
+<apex:page showHeader="false" sidebar="false" docType="html-5.0" controller="PreveriVozovnicoController">
+<meta name="viewport" content="initial-scale=1, maximum-scale=1"/>
+<apex:form id="preverjanjeForm">
+
+    <head>
+	<apex:includeScript value="{!$Resource.jquery321}"  />
+      	<meta charset="utf-8" />
+    	<meta http-equiv="x-ua-compatible" content="ie=edge" />
+    	<title>Preveri vozovnico</title>
+    	<meta name="viewport" content="width=device-width, initial-scale=1" />
+    	<style>
+    		table.usedTicket {
+	            /*background-color: #DEEDFC;*/
+	            background-image:url('{!$Resource.noSign}') !important; 
+	            -webkit-background-size: 30px !important;
+	            -moz-background-size: 30px !important;
+	            -o-background-size: 30px !important;
+	            background-size: 30px !important;
+	            background-repeat: no-repeat;
+	            background-position: right top; 
+	        }
+	        table.notUsedTicket {
+	            /*background-color: #DEEDFC;*/
+	            background-image:url('{!$Resource.checkmark}') !important; 
+	            -webkit-background-size: 30px !important;
+	            -moz-background-size: 30px !important;
+	            -o-background-size: 30px !important;
+	            background-size: 30px !important;
+	            background-repeat: no-repeat;
+	            background-position: right top; 
+	        }
+
+	        
+    	</style>
+
+      <!-- Import the Design System style sheet -->
+      <apex:slds />
+    </head>
+
+    <body style="width: 100%;">
+    	
+
+      <!-- REQUIRED SLDS WRAPPER -->
+      <div class="tilgo">
+
+   		
+
+         <div class="myapp" style="width:100%;">
+
+         	<div class="slds-page-header">
+			  <div class="slds-media">
+			    <div class="slds-media__figure">
+			      <span class="slds-icon_container slds-icon-standard-approval" title="Description of icon when needed">
+			        <svg class="slds-icon slds-page-header__icon" aria-hidden="true">
+			          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/standard-sprite/svg/symbols.svg#approval')}" />
+			        </svg>
+			      </span>
+			    </div>
+			    <div class="slds-media__body">
+			      <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="" style="font-size: 20px !important;">{!IF(vozovnica.Povratna_Vozovnica__c, 'Povratna vozovnica', 'Enosmerna vozovnica')}</h1>
+			      <p class="slds-text-body_small slds-line-height_reset">{!vozovnica.Kupec__r.Name} • Običajna • LP/RG</p>
+			    </div>
+			  </div>
+			</div>
+
+
+             <div class="slds-section first-section {!IF(!vozovnica.Porabljena_Vozovnica__c || !vozovnica.Povratna_Vozovnica__c, 'slds-is-open', '')}">
+			  <h3 class="slds-section__title ">
+			    <button aria-controls="expando-unique-id" aria-expanded="true" class="slds-button slds-section__title-action">
+			      <svg class="slds-section__title-action-icon slds-button__icon slds-button__icon_left" aria-hidden="true">
+			        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#switch')}" />
+			      </svg>
+			      <span class="slds-truncate" title="Section Title" style="font-weight: bold; color: {!IF(vozovnica.Porabljena_Vozovnica__c, 'red', 'green')};">Vozovnica ({!vozovnica.Postaja_Od__r.Name} - {!vozovnica.Postaja_Do__r.Name})</span>
+			    </button>
+			  </h3>
+			  <div aria-hidden="false" class="slds-section__content" id="expando-unique-id">
+			    <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-no-row-hover {!IF(vozovnica.Porabljena_Vozovnica__c, 'usedTicket', 'notUsedTicket')}" id="test">
+                  <thead>
+                    <tr class="slds-text-title_caps">
+                    	<th scope="col">
+                            <div class="slds-truncate centerAlignment" title="Vstopna">Veljavnost:</div>
+                      	</th>
+                      	<th scope="col">
+                            <div class="slds-truncate centerAlignment" title="Vstopna"></div>
+                      	</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  	<tr>
+                  		<th scope="col">
+                            <div class="slds-truncate centerAlignment" title="Vstopna">Vstopna</div>
+                      	</th>
+                      	<td class="slds-truncate centerAlignment" >{!vozovnica.Postaja_Od__r.Name}</td>
+                  	</tr>
+                    <tr>
+                        <th scope="col">
+                        	<div class="slds-truncate centerAlignment" title="Vstopna postaja">Izstopna</div>
+                      	</th>
+                        <td class="slds-truncate centerAlignment">{!vozovnica.Postaja_Do__r.Name}</td>
+
+                    </tr>
+                    <tr>
+                		<th scope="col">
+                            <div class="slds-truncate centerAlignment" title="Ura odhoda">Povratna</div>
+                          </th>
+                      	<td class="slds-truncate centerAlignment">
+                            {!IF(vozovnica.Povratna_Vozovnica__c, 'Da', 'Ne')}
+                        </td>
+                    </tr>
+                    <tr>
+                    	<th scope="col">
+                            <div class="slds-truncate centerAlignment" title="Izstopna postaja">Cena</div>
+                      	</th>
+                      	<td class="slds-truncate centerAlignment"><apex:outputField value="{!vozovnica.Cena_Vozovnice__c}"/>€</td>
+                    </tr>
+                    <tr>
+                    	<th scope="col">
+                            <div class="slds-truncate centerAlignment" title="Ura prihoda">Število vozovnic</div>
+                      	</th>
+                      	<td class="slds-truncate centerAlignment">{!vozovnica.Stevilo_Vozovnic__c}</td>
+                    </tr>
+                    <tr>
+                    	<th scope="col">
+                            <div class="slds-truncate centerAlignment" title="Razdalja">Dan veljave</div>
+                      	</th>
+                      	<td class="slds-truncate centerAlignment"><apex:outputText value="{0,date,dd.MM.yyyy}"> <apex:param value="{!vozovnica.Datum_Veljave__c}" /> </apex:outputText></td>
+                    </tr>
+                    <tr>
+                    	<th scope="col">
+                            <div class="slds-truncate centerAlignment" title="preverjena">Že preverjena?</div>
+                      	</th>
+                      	<td class="slds-truncate centerAlignment">{!IF(vozovnica.Porabljena_Vozovnica__c, 'Da', 'Ne')}</td>
+                    </tr>
+                    <tr>
+                    	<th scope="col">
+                            <div class="slds-truncate centerAlignment" title="Razdalja">Datum in čas preverjanja</div>
+                      	</th>
+                      	<td class="slds-truncate centerAlignment"><apex:outputText value="{0,date,dd.MM.yyyy HH:mm:ss}"> <apex:param value="{!vozovnica.Porabljena_Vozovnica_Timestamp__c}" /> </apex:outputText></td>
+                    </tr>
+                    <tr>
+                    	<td colspan="2">
+
+                    		<apex:commandButton action="{!preveriVozovnico}" disabled="{!IF(vozovnica.Porabljena_Vozovnica__c, true, false)}" styleClass="slds-button slds-button_brand" status="status" rerender="preverjanjeForm"  value="Preveri" style="width: 100%;">
+                        	</apex:commandButton>
+
+                        </td>
+                    </tr>
+                  </tbody>
+                </table>
+			  </div>
+			</div>
+
+
+			<apex:outputPanel rendered="{!vozovnica.Povratna_Vozovnica__c}">
+				<div class="slds-section second-section {!IF((vozovnica.Porabljena_Vozovnica__c && !vozovnica.Porabljena_Vozovnica_Povratna__c)  || vozovnica.Porabljena_Vozovnica_Final__c, 'slds-is-open', '')}">
+				  <h3 class="slds-section__title">
+				    <button aria-controls="expando-unique-id" aria-expanded="true" class="slds-button slds-section__title-action">
+				      <svg class="slds-section__title-action-icon slds-button__icon slds-button__icon_left" aria-hidden="true">
+				        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#switch')}" />
+				      </svg>
+				      <span class="slds-truncate" title="Section Title" style="font-weight: bold; color: {!IF(vozovnica.Porabljena_Vozovnica_Povratna__c, 'red', 'green')};">Vozovnica ({!vozovnica.Postaja_Do__r.Name} - {!vozovnica.Postaja_Od__r.Name})</span>
+				    </button>
+				  </h3>
+				  <div aria-hidden="false" class="slds-section__content" id="expando-unique-id">
+				    <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-no-row-hover {!IF(vozovnica.Porabljena_Vozovnica_Povratna__c, 'usedTicket', 'notUsedTicket')}">
+	                  <thead>
+	                    <tr class="slds-text-title_caps">
+	                    	<th scope="col">
+	                            <div class="slds-truncate centerAlignment" title="Vstopna">Veljavnost:</div>
+	                      	</th>
+	                      	<th scope="col">
+	                            <div class="slds-truncate centerAlignment" title="Vstopna"></div>
+	                      	</th>
+	                    </tr>
+	                  </thead>
+	                  <tbody>
+	                  	<tr>
+	                  		<th scope="col">
+	                            <div class="slds-truncate centerAlignment" title="Vstopna">Vstopna</div>
+	                      	</th>
+	                      	<td class="slds-truncate centerAlignment" >{!vozovnica.Postaja_Do__r.Name}</td>
+	                  	</tr>
+	                    <tr>
+	                        <th scope="col">
+	                        	<div class="slds-truncate centerAlignment" title="Vstopna postaja">Izstopna</div>
+	                      	</th>
+	                        <td class="slds-truncate centerAlignment">{!vozovnica.Postaja_Od__r.Name}</td>
+	                        
+	                        
+	                        
+	                        
+	                        
+	                    </tr>
+	                    <tr>
+	                		<th scope="col">
+	                            <div class="slds-truncate centerAlignment" title="Ura odhoda">Povratna</div>
+	                          </th>
+	                      	<td class="slds-truncate centerAlignment">
+	                            {!IF(vozovnica.Povratna_Vozovnica__c, 'Da', 'Ne')}
+	                        </td>
+	                    </tr>
+	                    <tr>
+	                    	<th scope="col">
+	                            <div class="slds-truncate centerAlignment" title="Izstopna postaja">Cena</div>
+	                      	</th>
+	                      	<td class="slds-truncate centerAlignment"><apex:outputField value="{!vozovnica.Cena_Vozovnice__c}"/>€</td>
+	                    </tr>
+	                    <tr>
+	                    	<th scope="col">
+	                            <div class="slds-truncate centerAlignment" title="Ura prihoda">Število vozovnic</div>
+	                      	</th>
+	                      	<td class="slds-truncate centerAlignment">{!vozovnica.Stevilo_Vozovnic__c}</td>
+	                    </tr>
+	                    <tr>
+	                    	<th scope="col">
+	                            <div class="slds-truncate centerAlignment" title="Razdalja">Dan veljave</div>
+	                      	</th>
+	                      	<td class="slds-truncate centerAlignment"><apex:outputText value="{0,date,dd.MM.yyyy}"> <apex:param value="{!vozovnica.Datum_Veljave__c}" /> </apex:outputText></td>
+	                    </tr>
+	                    <tr>
+	                	<th scope="col">
+	                        <div class="slds-truncate centerAlignment" title="preverjena">Že preverjena?</div>
+	                  	</th>
+	                      	<td class="slds-truncate centerAlignment">{!IF(vozovnica.Porabljena_Vozovnica_Povratna__c, 'Da', 'Ne')}</td>
+	                    </tr>
+	                    <tr>
+	                    	<th scope="col">
+	                            <div class="slds-truncate centerAlignment" title="Razdalja">Datum in čas preverjanja</div>
+	                      	</th>
+	                      	<td class="slds-truncate centerAlignment"><apex:outputText value="{0,date,dd.MM.yyyy HH:mm:ss}"> <apex:param value="{!vozovnica.Porabljena_Vozovnica_Povratna_Timestamp__c}" /> </apex:outputText></td>
+	                    </tr>
+	                    <tr>
+	                    	<td colspan="2">
+	                    		
+	                        		<apex:commandButton action="{!preveriPovratnoVozovnico}" disabled="{!IF(vozovnica.Porabljena_Vozovnica_Povratna__c, true, false)}" styleClass="slds-button slds-button_brand" status="status" rerender="preverjanjeForm"  value="Preveri" style="width: 100%;">
+	                        	</apex:commandButton>
+	                        	
+	                        </td>
+	                    </tr>
+	                  </tbody>
+	                </table>
+				  </div>
+				</div>
+			</apex:outputPanel>
+
+           <!-- / ACCOUNT LIST TABLE -->
+
+         </div>
+         <!-- / PRIMARY CONTENT WRAPPER -->
+         <apex:actionstatus id="status">
+           	<apex:facet name="start">
+               	<div class="slds-spinner_container" style="z-index: 9999; position: fixed;">
+                   	<div class="slds-spinner--brand slds-spinner slds-spinner--medium" aria-hidden="false" role="alert">
+                        <div class="slds-spinner__dot-a"></div>
+                        <div class="slds-spinner__dot-b"></div>
+                   	</div>
+               	</div>
+           	</apex:facet>
+   		</apex:actionstatus>
+
+   		
+      </div>
+      <!-- / REQUIRED SLDS WRAPPER -->
+
+     
+    </body>
+    <script>
+    	$( document ).ready(function() {
+		    $( ".first-section" ).click(function() {
+			  $( ".first-section" ).addClass('slds-is-open');
+			  $( ".second-section" ).removeClass('slds-is-open');
+			  return false;
+			});
+
+			$( ".second-section" ).click(function() {
+			  $( ".second-section" ).addClass('slds-is-open');
+			  $( ".first-section" ).removeClass('slds-is-open');
+			  return false;
+			});
+		});
+    	
+    </script>
+  </apex:form>
+</apex:page>

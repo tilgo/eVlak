@@ -1,0 +1,239 @@
+<apex:page controller="VozniRedController" docType="html-5.0" sideBar="false" showHeader="false">
+    <apex:includeScript value="{!$Resource.jquery321}"  />
+    <apex:includeScript value="{!$Resource.momentMinJS2181}"/>
+    <apex:includeScript value="{!URLFOR($Resource.aljs310, 'jquery.aljs-all.min.js')}"/>
+
+    <apex:stylesheet value="{!URLFOR($Resource.fa_470, 'css/font-awesome.css')}"/>
+    <!--apex:stylesheet value="{!URLFOR($Resource.slds232, '/assets/styles/salesforce-lightning-design-system.css')}"/-->
+    <apex:slds />
+
+    <style>
+        article.slds-card#banner {
+            color: #FFFFFF; 
+            /*background-color: #DEEDFC;*/
+            background-image:url('{!$Resource.banner62}') !important; 
+            -webkit-background-size: cover !important;
+            -moz-background-size: cover !important;
+            -o-background-size: cover !important;
+            background-size: cover !important;
+        }
+
+        article.slds-card#welcomeMsg {
+            /*color: #000000; */
+            /*background-color: #9ad3de;*/
+            /*color: #000000; */
+                /*background-color: #9ad3de;*/
+                background: rgb(240,249,255); /* Old browsers */
+                background: -moz-linear-gradient(top, rgba(240,249,255,1) 0%, rgba(240,249,255,1) 16%, rgba(240,249,255,1) 16%, rgba(203,235,255,1) 52%, rgba(161,219,255,1) 100%); /* FF3.6-15 */
+                background: -webkit-linear-gradient(top, rgba(240,249,255,1) 0%,rgba(240,249,255,1) 16%,rgba(240,249,255,1) 16%,rgba(203,235,255,1) 52%,rgba(161,219,255,1) 100%); /* Chrome10-25,Safari5.1-6 */
+                background: linear-gradient(to bottom, rgba(240,249,255,1) 0%,rgba(240,249,255,1) 16%,rgba(240,249,255,1) 16%,rgba(203,235,255,1) 52%,rgba(161,219,255,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+                filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f0f9ff', endColorstr='#a1dbff',GradientType=0 ); /* IE6-9 */
+        }
+    </style>
+
+    <script>
+
+        var assetsLocation = '{!URLFOR($Asset.SLDS)}';
+
+        $.aljsInit({ // Below are the new defaults
+            assetsLocation: assetsLocation,
+            scoped: true,
+            scopingClass: 'tilgo'
+        });
+
+
+    </script>
+
+    <div class="tilgo">
+        <div class="slds-grid slds-wrap">
+        <div class="slds-size_1-of-12"/>
+        <div class="slds-size_10-of-12" style="margin-top: 5px;">
+            <apex:form >
+
+
+            	<c:globalNavigationComponent imeStrani="homeTab"/>
+
+                <article class="slds-card" id="banner" style="margin-top: 5px; height: 250px;">
+                    <div class="slds-card__body">
+                    </div>
+                </article>
+
+
+                <article class="slds-card" style="margin-top: 5px;" id="welcomeMsg">
+                  <div class="slds-card__header slds-grid">
+                    <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                      <div class="slds-media__figure">
+                        <span class="slds-icon_container slds-icon-standard-avatar" title="">
+                          <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/custom-sprite/svg/symbols.svg#custom36')}" />
+                          </svg>
+                        </span>
+                      </div>
+                      <div class="slds-media__body">
+                        <h2>
+                          <!-- <a href="javascript:void(0);" class="slds-card__header-link slds-truncate" title="[object Object]" disabled> -->
+                            <span class="slds-text-heading_small">Dobrodošli v aplikaciji eVlak  <i style="color: red" class="fa fa-user-circle fa-2x"></i></span>
+                          <!-- </a> -->
+                        </h2>
+                      </div>
+                    </header>
+                    <div class="slds-no-flex">
+                      <!-- <button class="slds-button slds-button_neutral">Osveži</button> -->
+                    </div>
+                  </div>
+                  <div class="slds-card__body">
+                  	<div class="slds-grid slds-wrap">
+	                  	<!-- <div class="slds-size_1-of-6"/> -->
+	                  	
+	                  	<div class="slds-size_6-of-6">
+		              		<div class="slds-card" style="background-color: white;">
+							    <div class="slds-p-around_medium">Dobrodošli v aplikaciji eVlak! Aplikacija omogoča pregled voznega reda na relaciji Ljubljana - Divača in obratno. Prav tako omogoča nakup vozovnic na prej omenjeni lokaciji. Vaše morebitne predloge pošljite na <a href="mailto:evlak.info@gmail.com?Subject=Predlog" target="_top">evlak.info@gmail.com</a>.<i style="color: red" class="fa fa-user-circle fa-2x" aria-hidden="true"></i></div>
+						  	</div>
+					  	</div>
+
+					  	<!-- <div class="slds-size_1-of-6"/> -->
+				  	</div>
+                  </div>
+                  <footer class="slds-card__footer"></footer>
+            	</article>
+
+   
+
+	            <apex:outputPanel layout="none">
+                    <apex:actionstatus id="status">
+                        <apex:facet name="start">
+                            <div class="slds-spinner_container" style="z-index: 9999; position: fixed;">
+                                <div class="slds-spinner--brand slds-spinner slds-spinner--medium" aria-hidden="false" role="alert">
+                                    <div class="slds-spinner__dot-a"></div>
+                                    <div class="slds-spinner__dot-b"></div>
+                                </div>
+                            </div>
+                        </apex:facet>
+                    </apex:actionstatus>
+                </apex:outputPanel>    
+                
+                <c:footerComponent />   
+                  
+            </apex:form>
+        </div>
+        <div class="slds-size_1-of-12"/>
+        </div>
+    </div>     
+
+          <!--apex:form>
+          <div class="demo-only demo-only--sizing slds-grid slds-wrap">
+            <div class="slds-size_2-of-2">
+                <div class="slds">
+                    <div class="slds-form--horizontal">
+                        <!-- Datepicker -->
+                        <!--div class="slds-form-element" id="myPickerWrapper">
+                            <label class="slds-form-element__label" for="inputSample2">Select a Date</label>
+                            <div class="slds-form-element__control">
+                                <div class="slds-input-has-icon slds-input-has-icon--right">
+                                    <a id="myPickerToday" href="#">
+                                        <svg aria-hidden="true" class="slds-input__icon input-text-default">
+                                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#event')}"></use>
+                                        </svg>
+                                    </a>
+                                    <!--apex:inputField value="{!Account.MyDate__c}" styleClass="slds-input" id="myPicker"/-->
+                                <!--/div>
+                            </div>
+                        </div>
+
+                        <!-- TextArea -->
+                        <!--div class="slds-form-element">
+                            <label class="slds-form-element__label" for="textareaSample2">Textarea Label</label>
+                            <div class="slds-form-element__control">
+                                <textarea id="textareaSample2" class="slds-textarea"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        </apex:form-->    
+
+    <script>
+        // Remove onload focus from the datepicker input element
+        function setFocusOnLoad() { } 
+        // Take the href from the target link and set it to the custom icon link
+        jQuery(document).ready(function(){
+            jQuery('#myPickerToday').attr('href', jQuery('#myPickerWrapper span.dateFormat a').attr('href'));
+        });
+    </script>
+        
+
+        <!--div class="slds-picklist slds-dropdown-trigger slds-dropdown-trigger--click" data-aljs="picklist">
+            <div class="slds-form-element">
+                <label class="slds-form-element__label" for="text-input-01">Categories</label>
+                <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--right slds-picklist__input">
+                    <input type="search" id="text-input-01" class="slds-lookup__search-input slds-input" placeholder="Select an Option" aria-owns="option-list-01" role="combobox" aria-activedescendant="" aria-expanded="false" readonly=""/>
+                    <button class="slds-button slds-input__icon slds-text-color--default" aria-expanded="false" tabindex="-1" title="settings">
+                        <svg class="slds-button__icon slds-button__icon" aria-hidden="true">
+                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#down"></use>
+                        </svg>
+                        <span class="slds-assistive-text">Expand category options</span>
+                    </button>
+                </div>
+            </div>
+            <div class="slds-dropdown slds-dropdown--left" role="listbox">
+                <ul id="option-list-01" class="slds-dropdown__list slds-dropdown--length-5" role="presentation">
+                    <li role="presentation">
+                        <span class="slds-lookup__item-action slds-lookup__item-action--label" role="option" tabindex="0" id="listbox-option-242">
+                            <svg class="slds-icon slds-icon--selected slds-icon--x-small slds-icon-text-default slds-m-right--x-small slds-shrink-none" aria-hidden="true">
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
+                            </svg>
+                            <span class="slds-truncate">Option A</span>
+                        </span>
+                    </li>
+                    <li role="presentation">
+                        <span class="slds-lookup__item-action slds-lookup__item-action--label" role="option" tabindex="-1" id="listbox-option-243">
+                            <svg class="slds-icon slds-icon--selected slds-icon--x-small slds-icon-text-default slds-m-right--x-small slds-shrink-none" aria-hidden="true">
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
+                            </svg>
+                            <span class="slds-truncate">Option B</span>
+                        </span>
+                    </li>
+                    <li role="presentation">
+                        <span class="slds-lookup__item-action slds-lookup__item-action--label" role="option" tabindex="-1" id="listbox-option-244">
+                            <svg class="slds-icon slds-icon--selected slds-icon--x-small slds-icon-text-default slds-m-right--x-small slds-shrink-none" aria-hidden="true">
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
+                            </svg>
+                            <span class="slds-truncate">Option C</span>
+                        </span>
+                    </li>
+                    <li role="presentation">
+                        <span class="slds-lookup__item-action slds-lookup__item-action--label" role="option" tabindex="-1" id="listbox-option-245">
+                            <svg class="slds-icon slds-icon--selected slds-icon--x-small slds-icon-text-default slds-m-right--x-small slds-shrink-none" aria-hidden="true">
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
+                            </svg>
+                            <span class="slds-truncate">Option D</span>
+                        </span>
+                    </li>
+                    <li role="presentation">
+                        <span class="slds-lookup__item-action slds-lookup__item-action--label" role="option" tabindex="-1" id="listbox-option-246">
+                            <svg class="slds-icon slds-icon--selected slds-icon--x-small slds-icon-text-default slds-m-right--x-small slds-shrink-none" aria-hidden="true">
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
+                            </svg>
+                            <span class="slds-truncate">Option E</span>
+                        </span>
+                    </li>
+                    <li role="presentation">
+                        <span class="slds-lookup__item-action slds-lookup__item-action--label" role="option" tabindex="-1" id="listbox-option-247">
+                            <svg class="slds-icon slds-icon--selected slds-icon--x-small slds-icon-text-default slds-m-right--x-small slds-shrink-none" aria-hidden="true">
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
+                            </svg>
+                          <span class="slds-truncate" title="Option FGHIJKLMNOPQRSTUVWXYZ">Option FGHIJKLMNOPQRSTUVWXYZ</span>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </div-->
+        
+  <script>
+    //var momentDate = $('#date').datepicker('getDate');
+    //$('#date').datepicker('setDate', moment);
+  </script>
+</apex:page>
