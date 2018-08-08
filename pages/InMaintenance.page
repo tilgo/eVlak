@@ -1,4 +1,5 @@
 <apex:page showHeader="false" title="{!$Label.site.in_maintenance}" cache="false">
+<!-- maintenance -->
   <apex:composition template="StdExceptionTemplate">
     <apex:define name="icon">
       <apex:image url="{!URLFOR($Resource.SiteSamples, 'img/warning.png')}"/>
